@@ -18,12 +18,16 @@ return static function (ECSConfig $ecsConfig): void {
      * this package is meant to be extensible using class inheritance,
      * so we want to avoid private visibilities in the model namespace
      */
-    $ecsConfig->ruleWithConfiguration(ForbiddenPrivateVisibilityFixer::class, [
-        'analyzed_namespaces' => [
-            'Shopsys\MigrationBundle\Command',
-            'Shopsys\MigrationBundle\Component',
-        ],
-    ]);
+    $services = $ecsConfig->services();
+    $services->set('forbidden_private_visibility_fixer.migrations', ForbiddenPrivateVisibilityFixer::class)
+        ->call('configure', [
+            [
+                'analyzed_namespaces' => [
+                    'Shopsys\MigrationBundle\Command',
+                    'Shopsys\MigrationBundle\Component',
+                ],
+            ],
+        ]);
 
     $ecsConfig->skip([
         __DIR__ . '/src/Resources/views/Migration/migration.php.twig',

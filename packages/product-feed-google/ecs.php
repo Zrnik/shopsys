@@ -17,11 +17,15 @@ return static function (ECSConfig $ecsConfig): void {
      * this package is meant to be extensible using class inheritance,
      * so we want to avoid private visibilities in the model namespace
      */
-    $ecsConfig->ruleWithConfiguration(ForbiddenPrivateVisibilityFixer::class, [
-        'analyzed_namespaces' => [
-            'Shopsys\ProductFeed\GoogleBundle\Model',
-        ],
-    ]);
+    $services = $ecsConfig->services();
+    $services->set('forbidden_private_visibility_fixer.product_feed_google', ForbiddenPrivateVisibilityFixer::class)
+        ->call('configure', [
+            [
+                'analyzed_namespaces' => [
+                    'Shopsys\ProductFeed\GoogleBundle\Model',
+                ],
+            ],
+        ]);
 
     $ecsConfig->skip([
         ObjectIsCreatedByFactorySniff::class => [

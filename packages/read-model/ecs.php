@@ -17,11 +17,15 @@ return static function (ECSConfig $ecsConfig): void {
      * this package is meant to be extensible using class inheritance,
      * so we want to avoid private visibilities in the model namespace
      */
-    $ecsConfig->ruleWithConfiguration(ForbiddenPrivateVisibilityFixer::class, [
-        'analyzed_namespaces' => [
-            'Shopsys\ReadModelBundle',
-        ],
-    ]);
+    $services = $ecsConfig->services();
+    $services->set('forbidden_private_visibility_fixer.read_model', ForbiddenPrivateVisibilityFixer::class)
+        ->call('configure', [
+            [
+                'analyzed_namespaces' => [
+                    'Shopsys\ReadModelBundle',
+                ],
+            ],
+        ]);
 
     $ecsConfig->skip([
         ObjectIsCreatedByFactorySniff::class =>

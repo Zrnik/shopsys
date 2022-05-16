@@ -31,17 +31,21 @@ return static function (ECSConfig $ecsConfig): void {
      * this package is meant to be extensible using class inheritance,
      * so we want to avoid private visibilities in the model namespace
      */
-    $ecsConfig->ruleWithConfiguration(ForbiddenPrivateVisibilityFixer::class, [
-        'analyzed_namespaces' => [
-            'Shopsys\FrameworkBundle\Model',
-            'Shopsys\FrameworkBundle\Component',
-            'Shopsys\FrameworkBundle\Controller',
-            'Shopsys\FrameworkBundle\Form\Admin\AdvancedSearch',
-            'Shopsys\FrameworkBundle\Form\Constraints',
-            'Shopsys\FrameworkBundle\Form\Transformer',
-            'Shopsys\FrameworkBundle\Twig',
-        ],
-    ]);
+    $services = $ecsConfig->services();
+    $services->set('forbidden_private_visibility_fixer.framework', ForbiddenPrivateVisibilityFixer::class)
+        ->call('configure', [
+            [
+                'analyzed_namespaces' => [
+                    'Shopsys\FrameworkBundle\Model',
+                    'Shopsys\FrameworkBundle\Component',
+                    'Shopsys\FrameworkBundle\Controller',
+                    'Shopsys\FrameworkBundle\Form\Admin\AdvancedSearch',
+                    'Shopsys\FrameworkBundle\Form\Constraints',
+                    'Shopsys\FrameworkBundle\Form\Transformer',
+                    'Shopsys\FrameworkBundle\Twig',
+                ],
+            ],
+        ]);
 
     $ecsConfig->skip([
         FunctionLengthSniff::class => [
